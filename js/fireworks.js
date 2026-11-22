@@ -358,11 +358,3 @@ canvas.addEventListener( 'click', function( e ) {
 	launchPointerFirework();
 });
 
-document.addEventListener( 'touchmove', function( e ) {
-	e.preventDefault();
-}, { passive: false });
-
-document.addEventListener( 'gesturestart', function( e ) {
-	e.preventDefault();
-}, { passive: false });
-
