@@ -265,77 +265,38 @@ function launchPointerFirework() {
 	}
 }
 
-// mouse event bindings
-// update the mouse coordinates on mousemove
-canvas.addEventListener( 'mousemove', function( e ) {
-	mx = e.pageX - canvas.offsetLeft;
-	my = e.pageY - canvas.offsetTop;
-});
-
-// toggle mousedown state and prevent canvas from being selected
-canvas.addEventListener( 'mousedown', function( e ) {
-	e.preventDefault();
-	mousedown = true;
-});
-
-canvas.addEventListener( 'mouseup', function( e ) {
-	e.preventDefault();
-	mousedown = false;
-});
-
-// pointer event bindings (mouse, touch, and pen)
+// Pointer Events handle mouse, touch, and pen in every modern browser.
 function updatePointerPosition( e ) {
 	var rect = canvas.getBoundingClientRect();
 	mx = e.clientX - rect.left;
 	my = e.clientY - rect.top;
 }
 
-canvas.addEventListener( 'pointermove', function( e ) {
-	if ( mousedown ) {
-		updatePointerPosition( e );
-	}
-});
-
 canvas.addEventListener( 'pointerdown', function( e ) {
 	e.preventDefault();
 	updatePointerPosition( e );
-	canvas.setPointerCapture( e.pointerId );
 	launchPointerFirework();
 	mousedown = true;
-});
+	if ( canvas.setPointerCapture ) {
+		canvas.setPointerCapture( e.pointerId );
+	}
+}, { passive: false });
+
+canvas.addEventListener( 'pointermove', function( e ) {
+	if ( mousedown ) {
+		e.preventDefault();
+		updatePointerPosition( e );
+	}
+}, { passive: false });
 
 canvas.addEventListener( 'pointerup', function( e ) {
 	e.preventDefault();
 	mousedown = false;
-});
+}, { passive: false });
 
-canvas.addEventListener( 'pointercancel', function( e ) {
+canvas.addEventListener( 'pointercancel', function() {
 	mousedown = false;
 });
-
-// touch event bindings
-canvas.addEventListener( 'touchstart', function( e ) {
-	e.preventDefault();
-	var touch = e.changedTouches[0];
-	var rect = canvas.getBoundingClientRect();
-	mx = touch.clientX - rect.left;
-	my = touch.clientY - rect.top;
-	launchPointerFirework();
-	mousedown = true;
-}, { passive: false });
-
-canvas.addEventListener( 'touchmove', function( e ) {
-	e.preventDefault();
-	var touch = e.changedTouches[0];
-	var rect = canvas.getBoundingClientRect();
-	mx = touch.clientX - rect.left;
-	my = touch.clientY - rect.top;
-}, { passive: false });
-
-canvas.addEventListener( 'touchend', function( e ) {
-	e.preventDefault();
-	mousedown = false;
-}, { passive: false });
 
 window.addEventListener( 'resize', function() {
 	cw = window.innerWidth;
@@ -350,19 +311,4 @@ if ( document.readyState === 'complete' ) {
 } else {
 	window.addEventListener( 'load', loop, { once: true });
 }
-
-// Direct touch fallback: guaranteed launch on a physical tap.
-canvas.addEventListener( 'click', function( e ) {
-	e.preventDefault();
-	updatePointerPosition( e );
-	launchPointerFirework();
-});
-
-document.addEventListener( 'touchmove', function( e ) {
-	e.preventDefault();
-}, { passive: false });
-
-document.addEventListener( 'gesturestart', function( e ) {
-	e.preventDefault();
-}, { passive: false });
 
