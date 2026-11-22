@@ -255,60 +255,79 @@ function loop() {
 }
 
 function launchPointerFirework() {
-	if( window.matchMedia('(max-width: 700px)').matches ) {
-		var heartRect = document.getElementById('loveHeart').getBoundingClientRect();
-		mx = Math.max(heartRect.left, Math.min(mx, heartRect.right));
-		my = Math.max(heartRect.top, Math.min(my, heartRect.bottom));
+	var heart = document.getElementById( 'loveHeart' );
+	if( window.matchMedia('(max-width: 700px)').matches && heart ) {
+		var heartRect = heart.getBoundingClientRect();
+		mx = Math.max( heartRect.left, Math.min( mx, heartRect.right ) );
+		my = Math.max( heartRect.top, Math.min( my, heartRect.bottom ) );
 		fireworks.push( new Firework( heartRect.left + heartRect.width / 2, heartRect.bottom, mx, my ) );
 	} else {
 		fireworks.push( new Firework( cw / 2, ch, mx, my ) );
 	}
 }
 
-// Pointer Events handle mouse, touch, and pen in every modern browser.
-function updatePointerPosition( e ) {
-	var rect = canvas.getBoundingClientRect();
-	mx = e.clientX - rect.left;
-	my = e.clientY - rect.top;
-}
-
-canvas.addEventListener( 'pointerdown', function( e ) {
-	e.preventDefault();
-	updatePointerPosition( e );
-	launchPointerFirework();
-	mousedown = true;
-	if ( canvas.setPointerCapture ) {
-		canvas.setPointerCapture( e.pointerId );
-	}
-}, { passive: false });
-
-canvas.addEventListener( 'pointermove', function( e ) {
-	if ( mousedown ) {
-		e.preventDefault();
-		updatePointerPosition( e );
-	}
-}, { passive: false });
-
-canvas.addEventListener( 'pointerup', function( e ) {
-	e.preventDefault();
-	mousedown = false;
-}, { passive: false });
-
-canvas.addEventListener( 'pointercancel', function() {
-	mousedown = false;
-});
-
-window.addEventListener( 'resize', function() {
+// update canvas size when the viewport changes
+function resizeCanvas() {
 	cw = window.innerWidth;
 	ch = window.innerHeight;
 	canvas.width = cw;
 	canvas.height = ch;
+}
+
+window.addEventListener( 'resize', resizeCanvas );
+
+// update coordinates from mouse or touch/pointer input
+function updatePointerCoordinates( e ) {
+	var rect = canvas.getBoundingClientRect();
+	var point = e.touches ? e.touches[ 0 ] : e;
+	if( point ) {
+		mx = point.clientX - rect.left;
+		my = point.clientY - rect.top;
+	}
+}
+
+// mouse event bindings
+canvas.addEventListener( 'mousemove', function( e ) {
+	updatePointerCoordinates( e );
 });
 
-// Once the page and script are ready, start the animation loop.
-if ( document.readyState === 'complete' ) {
-	loop();
-} else {
-	window.addEventListener( 'load', loop, { once: true });
-}
+canvas.addEventListener( 'mousedown', function( e ) {
+	e.preventDefault();
+	updatePointerCoordinates( e );
+	launchPointerFirework();
+	mousedown = true;
+});
+
+canvas.addEventListener( 'mouseup', function( e ) {
+	e.preventDefault();
+	mousedown = false;
+});
+
+canvas.addEventListener( 'mouseleave', function() {
+	mousedown = false;
+});
+
+canvas.addEventListener( 'touchstart', function( e ) {
+	e.preventDefault();
+	updatePointerCoordinates( e );
+	launchPointerFirework();
+	mousedown = true;
+}, { passive: false } );
+
+canvas.addEventListener( 'touchmove', function( e ) {
+	e.preventDefault();
+	updatePointerCoordinates( e );
+}, { passive: false } );
+
+canvas.addEventListener( 'touchend', function( e ) {
+	e.preventDefault();
+	mousedown = false;
+}, { passive: false } );
+
+canvas.addEventListener( 'touchcancel', function() {
+	mousedown = false;
+});
+
+// once the window loads, we are ready for some fireworks!
+window.onload = loop;
 

@@ -2,18 +2,22 @@
 var $window = $(window), gardenCtx, gardenCanvas, $garden, garden;
 var clientWidth = $(window).width();
 var clientHeight = $(window).height();
+var heartScale = 1;
 var offsetX = 335;
 var offsetY = 257;
 
 $(function () {
 	$loveHeart = $("#loveHeart");
-	offsetX = $loveHeart.width() / 2;
-	offsetY = $loveHeart.height() / 2 - 55;
+	var loveHeartWidth = $loveHeart.width();
+	var loveHeartHeight = $loveHeart.height();
+	heartScale = loveHeartWidth < 670 ? loveHeartWidth / 670 : 1;
+	offsetX = loveHeartWidth / 2;
+	offsetY = loveHeartHeight / 2 - (55 * heartScale);
 
 	$garden = $("#garden");
 	gardenCanvas = $garden[0];
-	gardenCanvas.width = $loveHeart.width();
-	gardenCanvas.height = $loveHeart.height();
+	gardenCanvas.width = loveHeartWidth;
+	gardenCanvas.height = loveHeartHeight;
 	gardenCtx = gardenCanvas.getContext("2d");
 	gardenCtx.globalCompositeOperation = "lighter";
 	garden = new Garden(gardenCtx, gardenCanvas);
@@ -30,21 +34,24 @@ $(function () {
 
 $(window).resize(function() {
     var $loveHeart = $("#loveHeart");
+    var loveHeartWidth = $loveHeart.width();
+    var loveHeartHeight = $loveHeart.height();
     var gardenCanvas = $("#garden")[0];
 
-    gardenCanvas.width = $loveHeart.width();
-    gardenCanvas.height = $loveHeart.height();
+    gardenCanvas.width = loveHeartWidth;
+    gardenCanvas.height = loveHeartHeight;
 
     clientWidth = $(window).width();
     clientHeight = $(window).height();
-    offsetX = $loveHeart.width() / 2;
-    offsetY = $loveHeart.height() / 2 - 55;
+    heartScale = loveHeartWidth < 670 ? loveHeartWidth / 670 : 1;
+    offsetX = loveHeartWidth / 2;
+    offsetY = loveHeartHeight / 2 - (55 * heartScale);
 });
 
 function getHeartPoint(angle) {
 	var t = angle / Math.PI;
-	var x = 19.5 * (16 * Math.pow(Math.sin(t), 3));
-	var y = - 20 * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
+	var x = 19.5 * heartScale * (16 * Math.pow(Math.sin(t), 3));
+	var y = -20 * heartScale * (13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t));
 	return new Array(offsetX + x, offsetY + y);
 }
 
@@ -128,9 +135,22 @@ function showMessages() {
 }
 
 function adjustWordsPosition() {
-	$('#words').css("position", "absolute");
-	$('#words').css("top", $("#garden").position().top + 195);
-	$('#words').css("left", $("#garden").position().left + 70);
+	var $garden = $("#garden");
+	var $words = $("#words");
+
+	if( window.innerWidth <= 700 ) {
+		$words.css("position", "absolute");
+		$words.css("top", $garden.position().top + ($garden.height() * 0.31));
+		$words.css("left", "50%");
+		$words.css("transform", "translateX(-50%)");
+		$words.css("text-align", "center");
+	} else {
+		$words.css("position", "absolute");
+		$words.css("top", $garden.position().top + 195);
+		$words.css("left", $garden.position().left + 70);
+		$words.css("transform", "none");
+		$words.css("text-align", "left");
+	}
 }
 
 function adjustCodePosition() {
