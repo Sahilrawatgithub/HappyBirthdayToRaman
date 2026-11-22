@@ -276,13 +276,16 @@ function updatePointerPosition( e ) {
 }
 
 canvas.addEventListener( 'pointermove', function( e ) {
-	updatePointerPosition( e );
+	if ( mousedown ) {
+		updatePointerPosition( e );
+	}
 });
 
 canvas.addEventListener( 'pointerdown', function( e ) {
 	e.preventDefault();
 	updatePointerPosition( e );
 	canvas.setPointerCapture( e.pointerId );
+	fireworks.push( new Firework( cw / 2, ch, mx, my ) );
 	mousedown = true;
 });
 
@@ -294,6 +297,30 @@ canvas.addEventListener( 'pointerup', function( e ) {
 canvas.addEventListener( 'pointercancel', function( e ) {
 	mousedown = false;
 });
+
+// touch event bindings (fallback for older mobile browsers)
+canvas.addEventListener( 'touchstart', function( e ) {
+	e.preventDefault();
+	var touch = e.touches[0];
+	var rect = canvas.getBoundingClientRect();
+	mx = touch.clientX - rect.left;
+	my = touch.clientY - rect.top;
+	fireworks.push( new Firework( cw / 2, ch, mx, my ) );
+	mousedown = true;
+}, { passive: false });
+
+canvas.addEventListener( 'touchmove', function( e ) {
+	e.preventDefault();
+	var touch = e.touches[0];
+	var rect = canvas.getBoundingClientRect();
+	mx = touch.clientX - rect.left;
+	my = touch.clientY - rect.top;
+}, { passive: false });
+
+canvas.addEventListener( 'touchend', function( e ) {
+	e.preventDefault();
+	mousedown = false;
+}, { passive: false });
 
 window.addEventListener( 'resize', function() {
 	cw = window.innerWidth;
