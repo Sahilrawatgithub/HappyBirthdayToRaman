@@ -230,8 +230,13 @@ function loop() {
 	// launch fireworks automatically to random coordinates, when the mouse isn't down
 	if( timerTick >= timerTotal ) {
 		if( !mousedown ) {
-			// start the firework at the bottom middle of the screen, then set the random target coordinates, the random y coordinates will be set within the range of the top half of the screen
-			fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
+			var isPhone = window.matchMedia('(max-width: 700px)').matches;
+			var heartRect = document.getElementById('loveHeart').getBoundingClientRect();
+			var targetX = isPhone ? random(heartRect.left, heartRect.right) : random(0, cw);
+			var targetY = isPhone ? random(heartRect.top + heartRect.height * 0.15, heartRect.bottom - heartRect.height * 0.05) : random(0, ch / 2);
+			var startX = isPhone ? heartRect.left + heartRect.width / 2 : cw / 2;
+			var startY = isPhone ? heartRect.bottom : ch;
+			fireworks.push( new Firework( startX, startY, targetX, targetY ) );
 			timerTick = 0;
 		}
 	} else {
@@ -241,12 +246,22 @@ function loop() {
 	// limit the rate at which fireworks get launched when mouse is down
 	if( limiterTick >= limiterTotal ) {
 		if( mousedown ) {
-			// start the firework at the bottom middle of the screen, then set the current mouse coordinates as the target
-			fireworks.push( new Firework( cw / 2, ch, mx, my ) );
+			launchPointerFirework();
 			limiterTick = 0;
 		}
 	} else {
 		limiterTick++;
+	}
+}
+
+function launchPointerFirework() {
+	if( window.matchMedia('(max-width: 700px)').matches ) {
+		var heartRect = document.getElementById('loveHeart').getBoundingClientRect();
+		mx = Math.max(heartRect.left, Math.min(mx, heartRect.right));
+		my = Math.max(heartRect.top, Math.min(my, heartRect.bottom));
+		fireworks.push( new Firework( heartRect.left + heartRect.width / 2, heartRect.bottom, mx, my ) );
+	} else {
+		fireworks.push( new Firework( cw / 2, ch, mx, my ) );
 	}
 }
 
@@ -285,7 +300,7 @@ canvas.addEventListener( 'pointerdown', function( e ) {
 	e.preventDefault();
 	updatePointerPosition( e );
 	canvas.setPointerCapture( e.pointerId );
-	fireworks.push( new Firework( cw / 2, ch, mx, my ) );
+	launchPointerFirework();
 	mousedown = true;
 });
 
@@ -298,20 +313,20 @@ canvas.addEventListener( 'pointercancel', function( e ) {
 	mousedown = false;
 });
 
-// touch event bindings (fallback for older mobile browsers)
+// touch event bindings
 canvas.addEventListener( 'touchstart', function( e ) {
 	e.preventDefault();
-	var touch = e.touches[0];
+	var touch = e.changedTouches[0];
 	var rect = canvas.getBoundingClientRect();
 	mx = touch.clientX - rect.left;
 	my = touch.clientY - rect.top;
-	fireworks.push( new Firework( cw / 2, ch, mx, my ) );
+	launchPointerFirework();
 	mousedown = true;
 }, { passive: false });
 
 canvas.addEventListener( 'touchmove', function( e ) {
 	e.preventDefault();
-	var touch = e.touches[0];
+	var touch = e.changedTouches[0];
 	var rect = canvas.getBoundingClientRect();
 	mx = touch.clientX - rect.left;
 	my = touch.clientY - rect.top;
@@ -329,6 +344,25 @@ window.addEventListener( 'resize', function() {
 	canvas.height = ch;
 });
 
-// once the window loads, we are ready for some fireworks!
-window.onload = loop;
+// Once the page and script are ready, start the animation loop.
+if ( document.readyState === 'complete' ) {
+	loop();
+} else {
+	window.addEventListener( 'load', loop, { once: true });
+}
+
+// Direct touch fallback: guaranteed launch on a physical tap.
+canvas.addEventListener( 'click', function( e ) {
+	e.preventDefault();
+	updatePointerPosition( e );
+	launchPointerFirework();
+});
+
+document.addEventListener( 'touchmove', function( e ) {
+	e.preventDefault();
+}, { passive: false });
+
+document.addEventListener( 'gesturestart', function( e ) {
+	e.preventDefault();
+}, { passive: false });
 
