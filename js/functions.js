@@ -29,11 +29,16 @@ $(function () {
 });
 
 $(window).resize(function() {
-	var newWidth = $(window).width();
-	var newHeight = $(window).height();
-	if (newWidth != clientWidth && newHeight != clientHeight) {
-		location.replace(location);
-	}
+    var $loveHeart = $("#loveHeart");
+    var gardenCanvas = $("#garden")[0];
+
+    gardenCanvas.width = $loveHeart.width();
+    gardenCanvas.height = $loveHeart.height();
+
+    clientWidth = $(window).width();
+    clientHeight = $(window).height();
+    offsetX = $loveHeart.width() / 2;
+    offsetY = $loveHeart.height() / 2 - 55;
 });
 
 function getHeartPoint(angle) {
