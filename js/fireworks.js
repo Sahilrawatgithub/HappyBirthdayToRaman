@@ -230,13 +230,7 @@ function loop() {
 	// launch fireworks automatically to random coordinates, when the mouse isn't down
 	if( timerTick >= timerTotal ) {
 		if( !mousedown ) {
-			var isPhone = window.matchMedia('(max-width: 700px)').matches;
-			var heartRect = document.getElementById('loveHeart').getBoundingClientRect();
-			var targetX = isPhone ? random(heartRect.left, heartRect.right) : random(0, cw);
-			var targetY = isPhone ? random(heartRect.top + heartRect.height * 0.15, heartRect.bottom - heartRect.height * 0.05) : random(0, ch / 2);
-			var startX = isPhone ? heartRect.left + heartRect.width / 2 : cw / 2;
-			var startY = isPhone ? heartRect.bottom : ch;
-			fireworks.push( new Firework( startX, startY, targetX, targetY ) );
+			fireworks.push( new Firework( cw / 2, ch, random( 0, cw ), random( 0, ch / 2 ) ) );
 			timerTick = 0;
 		}
 	} else {
@@ -255,12 +249,7 @@ function loop() {
 }
 
 function launchPointerFirework() {
-	if( window.matchMedia('(max-width: 700px)').matches ) {
-		var heartRect = document.getElementById('loveHeart').getBoundingClientRect();
-		mx = Math.max(heartRect.left, Math.min(mx, heartRect.right));
-		my = Math.max(heartRect.top, Math.min(my, heartRect.bottom));
-		fireworks.push( new Firework( heartRect.left + heartRect.width / 2, heartRect.bottom, mx, my ) );
-	} else {
+	if( mousedown || mx !== undefined && my !== undefined ) {
 		fireworks.push( new Firework( cw / 2, ch, mx, my ) );
 	}
 }

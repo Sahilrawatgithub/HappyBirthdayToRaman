@@ -6,19 +6,17 @@ html, body{
 }
 
 body{
-  overflow:auto;
+  margin:0;
+  padding:0;
   font-size:12px;
+  overflow:auto;
   font-family:'Inconsolata' !important;
   background:black;
 }
 
 #mainDiv{
-  position:relative;
   width:100%;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  height:100%;
 }
 
 #content{
@@ -29,55 +27,36 @@ body{
 }
 
 #loveHeart{
-  position:relative;
-  float:none;
+  float:left;
   width:670px;
   height:625px;
-  margin:auto;
 }
 
-@media (max-width:700px) {
-  html,
-  body,
-  #mainDiv,
-  #content {
-    width:100%;
-  }
-
-  #loveHeart{
-    width:88vw;
-    height:82vw;
-    max-height:62vh;
-  }
-
-  #words{
-    width:74%;
-    max-width:74%;
-    font-size:16px;
-  }
+#garden{
+  width:100%;
+  height:100%;
 }
 
 #elapseClock{
   text-align:right;
   font-size:18px;
   margin-top:10px;
-  margin-bottom:0px
+  margin-bottom:0;
 }
 
 #words{
   width:500px;
   font-size:24px;
-  color:#666
+  color:#666;
 }
 
 #messages{
-  display:none
+  display:none;
 }
 
-#elapseClock .digit
-{
+#elapseClock .digit{
   font-family:"digit";
-  font-size:36px
+  font-size:36px;
 }
 
 #loveu
@@ -85,9 +64,9 @@ body{
   padding:5px;
   font-size:22px;
   margin-top:30px;
-  margin-right:0px;
+  margin-right:0;
   text-align:center;
-  display:none
+  display:none;
 }
 
 #loveu .signature{
@@ -96,7 +75,7 @@ body{
 }
 
 #clickSound{
-  display:none
+  display:none;
 }
 
 #code{
@@ -105,28 +84,24 @@ body{
   width:440px;
   height:400px;
   color:#333;
-  font-size:12px
+  font-size:12px;
 }
 
 #code .string{
-  color:#2a36ff
+  color:#2a36ff;
 }
 
 #code .keyword{
   color:#7f0055;
-  font-weight:bold
+  font-weight:bold;
 }
 
 #code .placeholder{
-  margin-left:15px
+  margin-left:15px;
 }
 
 #code .space{
-  margin-left:7px
-}
-
-#code .comments{
-  color:#3f7f5f
+  margin-left:7px;
 }
 
 #copyright{
@@ -134,7 +109,7 @@ body{
   margin-top:10px;
   text-align:center;
   width:100%;
-  color:#666
+  color:#666;
 }
 
 #errorMsg{
@@ -143,18 +118,14 @@ body{
   font-size:24px;
   position:absolute;
   top:100px;
-  left:0
+  left:0;
 }
 
 #copyright a{
-  color:#666
+  color:#666;
 }
 
-#canvas{
-  position:absolute;
-  inset:0;
-  z-index:10;
-  width:100%;
-  height:100%;
-  pointer-events:auto;
+canvas{
+  cursor:crosshair;
+  display:block;
 }
