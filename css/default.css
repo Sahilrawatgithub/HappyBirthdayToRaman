@@ -1,26 +1,53 @@
-body{
+html, body{
+  width:100%;
+  height:100%;
   margin:0;
+  overflow:hidden;
+}
+
+body{
   padding:0;
   font-size:12px;
-  overflow:auto;
-  font-family: 'Inconsolata' !important;
-  background: black;
+  font-family:'Inconsolata' !important;
+  background:black;
 }
 
 #mainDiv{
+  position:fixed;
+  inset:0;
   width:100%;
-  height:100%
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+#content{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin:0 !important;
 }
 
 #loveHeart{
-  float:left;
-  width:670px;
-  height:625px
+  position:relative;
+  float:none;
+  width:min(670px, 100vw, calc(100vh * 670 / 625));
+  height:auto;
+  aspect-ratio:670 / 625;
+  margin:auto;
 }
 
-#garden{
-  width:100%;
-  height:100%
+@media (max-width:700px), (max-height:625px) {
+  #loveHeart{
+    width:min(100vw, calc(100vh * 670 / 625));
+  }
+
+  #words{
+    width:75%;
+    max-width:500px;
+    font-size:20px;
+  }
 }
 
 #elapseClock{
@@ -119,4 +146,5 @@ body{
 canvas {
 	cursor: crosshair;
  	display: block;
+	touch-action: none;
 }

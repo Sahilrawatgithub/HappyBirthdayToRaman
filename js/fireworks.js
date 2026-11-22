@@ -268,6 +268,40 @@ canvas.addEventListener( 'mouseup', function( e ) {
 	mousedown = false;
 });
 
+// pointer event bindings (mouse, touch, and pen)
+function updatePointerPosition( e ) {
+	var rect = canvas.getBoundingClientRect();
+	mx = e.clientX - rect.left;
+	my = e.clientY - rect.top;
+}
+
+canvas.addEventListener( 'pointermove', function( e ) {
+	updatePointerPosition( e );
+});
+
+canvas.addEventListener( 'pointerdown', function( e ) {
+	e.preventDefault();
+	updatePointerPosition( e );
+	canvas.setPointerCapture( e.pointerId );
+	mousedown = true;
+});
+
+canvas.addEventListener( 'pointerup', function( e ) {
+	e.preventDefault();
+	mousedown = false;
+});
+
+canvas.addEventListener( 'pointercancel', function( e ) {
+	mousedown = false;
+});
+
+window.addEventListener( 'resize', function() {
+	cw = window.innerWidth;
+	ch = window.innerHeight;
+	canvas.width = cw;
+	canvas.height = ch;
+});
+
 // once the window loads, we are ready for some fireworks!
 window.onload = loop;
 
