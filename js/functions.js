@@ -14,7 +14,7 @@ function resizeHeartLayout() {
 	var loveHeight;
 
 	if (viewportWidth <= 700) {
-		loveWidth = viewportWidth;
+		loveWidth = viewportWidth * 0.88;
 		loveHeight = loveWidth * 625 / 670;
 		if (loveHeight > viewportHeight) {
 			loveHeight = viewportHeight;
