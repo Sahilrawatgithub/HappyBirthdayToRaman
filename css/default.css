@@ -1,22 +1,31 @@
 html, body{
   width:100%;
-  min-height:100%;
+  height:100dvh;
   margin:0;
   padding:0;
+  overflow:hidden;
+  overscroll-behavior:none;
+  touch-action:none;
 }
 
 body{
-  margin:0;
-  padding:0;
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100dvh;
   font-size:12px;
-  overflow:auto;
   font-family:'Inconsolata' !important;
   background:black;
 }
 
 #mainDiv{
+  position:fixed;
+  inset:0;
   width:100%;
   height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 
 #content{
@@ -27,36 +36,47 @@ body{
 }
 
 #loveHeart{
-  float:left;
-  width:670px;
-  height:625px;
+  position:relative;
+  float:none;
+  width:min(670px, 100vw, calc(100vh * 670 / 625));
+  height:auto;
+  aspect-ratio:670 / 625;
+  margin:auto;
 }
 
-#garden{
-  width:100%;
-  height:100%;
+@media (max-width:700px), (max-height:625px) {
+  #loveHeart{
+    width:min(100vw, calc(100vh * 670 / 625));
+  }
+
+  #words{
+    width:75%;
+    max-width:500px;
+    font-size:20px;
+  }
 }
 
 #elapseClock{
   text-align:right;
   font-size:18px;
   margin-top:10px;
-  margin-bottom:0;
+  margin-bottom:0px
 }
 
 #words{
   width:500px;
   font-size:24px;
-  color:#666;
+  color:#666
 }
 
 #messages{
-  display:none;
+  display:none
 }
 
-#elapseClock .digit{
+#elapseClock .digit
+{
   font-family:"digit";
-  font-size:36px;
+  font-size:36px
 }
 
 #loveu
@@ -64,9 +84,9 @@ body{
   padding:5px;
   font-size:22px;
   margin-top:30px;
-  margin-right:0;
+  margin-right:0px;
   text-align:center;
-  display:none;
+  display:none
 }
 
 #loveu .signature{
@@ -75,7 +95,7 @@ body{
 }
 
 #clickSound{
-  display:none;
+  display:none
 }
 
 #code{
@@ -84,24 +104,28 @@ body{
   width:440px;
   height:400px;
   color:#333;
-  font-size:12px;
+  font-size:12px
 }
 
 #code .string{
-  color:#2a36ff;
+  color:#2a36ff
 }
 
 #code .keyword{
   color:#7f0055;
-  font-weight:bold;
+  font-weight:bold
 }
 
 #code .placeholder{
-  margin-left:15px;
+  margin-left:15px
 }
 
 #code .space{
-  margin-left:7px;
+  margin-left:7px
+}
+
+#code .comments{
+  color:#3f7f5f
 }
 
 #copyright{
@@ -109,7 +133,7 @@ body{
   margin-top:10px;
   text-align:center;
   width:100%;
-  color:#666;
+  color:#666
 }
 
 #errorMsg{
@@ -118,14 +142,20 @@ body{
   font-size:24px;
   position:absolute;
   top:100px;
-  left:0;
+  left:0
 }
 
 #copyright a{
-  color:#666;
+  color:#666
 }
 
-canvas{
+#canvas{
+  position:fixed;
+  inset:0;
+  z-index:10;
+  width:100dvw;
+  height:100dvh;
   cursor:crosshair;
   display:block;
+  touch-action:none;
 }
